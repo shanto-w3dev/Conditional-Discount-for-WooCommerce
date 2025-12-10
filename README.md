@@ -54,7 +54,7 @@ Apply discounts based on specific conditions in WooCommerce.
 
 ## Support
 
-For support and bug reports, visit [https://shanto.net/support](https://shanto.net/support)
+For support and bug reports, visit [https://shanto.net/contact](https://shanto.net/contact)
 
 ## License
 
