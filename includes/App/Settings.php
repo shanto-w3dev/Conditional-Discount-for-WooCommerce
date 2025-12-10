@@ -73,11 +73,11 @@ class Settings {
                 'id'      => 'cd_conditional_discount_type',
                 'default' => 'percentage',
             ],
-            'discount_value' => [
+            'discount_amount' => [
                 'name'    => __( 'Discount Value', 'conditional-discount' ),
                 'type'    => 'number',
                 'desc'    => __( 'Flat Amount = fixed amount discount. Percentage = % of cart subtotal.', 'conditional-discount' ),
-                'id'      => 'cd_conditional_discount_value',
+                'id'      => 'cd_conditional_discount_amount',
                 'default' => '10',
                 'custom_attributes' => [
                     'min'  => 0,
