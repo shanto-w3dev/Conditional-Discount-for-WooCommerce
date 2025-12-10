@@ -1,6 +1,6 @@
 # Conditional Discount for WooCommerce
 
-**A WordPress plugin to apply conditional discounts in your WooCommerce store — based on product category, user role, cart total, and more.**
+**A WordPress plugin to apply conditional discounts in your WooCommerce store — based on specific condition like minimum amount, product count, and more.**
 
 ## Table of Contents
 
