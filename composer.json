@@ -1,0 +1,21 @@
+{
+    "name": "shanto/conditional-discount",
+    "description": "A WordPress plugin to apply conditional discounts based on various criteria.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Shanto\\ConditionalDiscount\\": "includes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Riadujjaman Shanto",
+            "email": "contact@shanto.net"
+        }
+    ],
+    "require": {
+        "php": ">=8.0"
+    }
+}
