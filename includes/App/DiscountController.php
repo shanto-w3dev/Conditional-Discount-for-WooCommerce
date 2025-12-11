@@ -38,12 +38,14 @@ class DiscountController {
         } elseif ( 'item_count' === $criteria && $item_count >= $threshold ) {
             $apply_discount = true;
         }
+        
+        $currency  = get_woocommerce_currency_symbol();
 
         if ( $apply_discount ) {
             $discount = ( 'percentage' === $discount_type ) ? ( $subtotal * ( $discount_amount / 100 ) ) : $discount_amount;
 
             if($discount > 0){
-                $cart->add_fee( sprintf( __( 'Discount (%s)', 'conditional-discount' ), $discount_type === 'percentage' ? $discount_amount . '%' : wc_price( $discount_amount ) ), -$discount );
+                $cart->add_fee( sprintf( __( 'Special Discount (%s)', 'conditional-discount' ), $discount_type === 'percentage' ? $discount_amount . '%' : $discount_amount . $currency ), -$discount );
             }
         }
     }

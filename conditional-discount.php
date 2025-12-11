@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Conditional Discount for WooCommerce
  * Description: Apply discounts based on specific conditions in WooCommerce.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Plugin URI: https://shanto.net/plugins/conditional-discount
  * Author: Riadujjaman Shanto
  * Author URI: https://shanto.net
