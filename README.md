@@ -125,4 +125,4 @@ If you find bugs or want new features, feel free to open an issue in the repo.
 
 **Riadujjaman Shanto**  
 WordPress Developer  
-GitHub: https://github.com/shanto-w3dev
+Website: https://shanto.net
