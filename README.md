@@ -24,8 +24,6 @@ This plugin is fully OOP-based, uses a namespace-driven architecture, follows th
 
 ## Plugin Architecture
 
-Your plugin is built using:
-
 ### **1. Namespaces**
 Improves readability and prevents function/class conflicts.
 
@@ -34,7 +32,6 @@ Namespaces used:
 Shanto\ConditionalDiscount
 Shanto\ConditionalDiscount\App
 Shanto\ConditionalDiscount\App\Traits
-Shanto\ConditionalDiscount\App\Modules
 ```
 
 ---
@@ -43,10 +40,9 @@ Shanto\ConditionalDiscount\App\Modules
 Loads all classes automatically based on folder structure:
 
 ```
-inc/
+includes/
   App/
     Traits/
-    Modules/
 ```
 
 No manual includes required.
@@ -73,68 +69,6 @@ Ensures only one instance of each module runs.
 
 ---
 
-### **4. Modular Design**
-Each core functionality lives inside `Modules/`:
-
-```
-Modules/
-  - Discounts.php        # Main discount handling logic
-  - CartConditions.php   # Handles cart condition rules
-```
-
-The plugin automatically loads each module.
-
----
-
-## 🛠 How It Works
-
-### ✔ Step 1 — Plugin bootstraps via main file  
-The main plugin file defines:
-
-- Plugin name  
-- Version  
-- Autoloader  
-- Core initializer class  
-
-Example:
-
-```php
-require_once __DIR__ . '/inc/Autoloader.php';
-Autoloader::register();
-Plugin::instance();
-```
-
----
-
-### ✔ Step 2 — Modules hook into WooCommerce
-
-Example from `Discounts.php`:
-
-```php
-add_action('woocommerce_cart_calculate_fees', [$this, 'apply_discounts']);
-```
-
-This allows your plugin to:
-
-- Check cart conditions  
-- Calculate discount amount  
-- Apply WooCommerce fee as a negative value  
-
----
-
-### ✔ Step 3 — Conditions decide if discount is applied  
-Example from `CartConditions.php`:
-
-```php
-public function is_valid(){
-    return WC()->cart && WC()->cart->subtotal > 100;
-}
-```
-
-You can add more conditions anytime.
-
----
-
 ## Installation
 
 1. Download the plugin or clone the repository:
@@ -157,14 +91,6 @@ The plugin automatically applies:
 
 - A cart discount if cart subtotal exceeds a specific condition  
 - Discounts through WooCommerce's fee API  
-
-To extend conditions, create a new file inside:
-
-```
-inc/App/Modules/
-```
-
-Then register it in the plugin initializer.
 
 ---
 
@@ -199,4 +125,4 @@ If you find bugs or want new features, feel free to open an issue in the repo.
 
 **Riadujjaman Shanto**  
 WordPress Developer  
-GitHub: https://github.com/shanto-w3dev
+Website: https://shanto.net
