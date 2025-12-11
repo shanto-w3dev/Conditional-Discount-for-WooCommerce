@@ -1,111 +1,202 @@
 # Conditional Discount for WooCommerce
 
-**A WordPress plugin to apply conditional discounts in your WooCommerce store — based on specific condition like minimum amount, product count, and more.**
+**Conditional Discount for WooCommerce** is a lightweight and modular WordPress plugin that allows store owners to apply smart, rule-based discounts to WooCommerce products during cart and checkout.  
+You can create unlimited discount rules based on product conditions, cart totals, user details, and more.
 
-## Table of Contents
+This plugin is fully OOP-based, uses a namespace-driven architecture, follows the Singleton pattern, and includes an autoloader for clean, scalable development.
 
-- [Features](#features)  
-- [Requirements](#requirements)  
-- [Installation](#installation)  
-- [Usage / Configuration](#usage--configuration)  
-- [Examples](#examples)  
-- [How it works (Technical)](#how-it-works-technical)  
-- [Changelog](#changelog)  
-- [Support](#support)  
-- [License](#license)  
-- [Author](#author)
+![Plugin Screenshot](assets/media/screenshot.png)
 
 ---
 
 ## Features
 
-This WordPress plugin lets you:  
-
-- ✅ Apply discounts based on **product categories**.  
-- ✅ Apply discounts based on **user roles** (e.g. give special discount to “subscriber”, “wholesale”, etc.).  
-- ✅ Discount rules based on **cart total** (e.g. if cart total ≥ $100, apply discount).  
-- ✅ Support for **percentage** discounts and **fixed amount** discounts.  
-- ✅ A simple, easy-to-use admin interface in WordPress to manage discount rules.  
-- ✅ Compatible with standard WooCommerce setup (no heavy dependencies).  
+- Apply **conditional cart discounts**  
+- Create unlimited discount rules  
+- Lightweight, clean, and modular code structure  
+- Uses **namespaces + autoloader**  
+- Follows the **Singleton design pattern**  
+- WooCommerce-friendly architecture  
+- Easy to extend with custom conditions  
+- No unnecessary scripts or assets loaded on the frontend
 
 ---
 
-## Requirements
+## Plugin Architecture
 
-- WordPress 5.0 or higher  
-- WooCommerce 4.0 or higher  
-- PHP 7.4 or higher (or as specified in plugin header)  
+Your plugin is built using:
+
+### **1. Namespaces**
+Improves readability and prevents function/class conflicts.
+
+Namespaces used:
+```
+Shanto\ConditionalDiscount
+Shanto\ConditionalDiscount\App
+Shanto\ConditionalDiscount\App\Traits
+Shanto\ConditionalDiscount\App\Modules
+```
+
+---
+
+### **2. Autoloader**
+Loads all classes automatically based on folder structure:
+
+```
+inc/
+  App/
+    Traits/
+    Modules/
+```
+
+No manual includes required.
+
+---
+
+### **3. Singleton Pattern**
+Every major class uses a `Singleton` trait:
+
+```php
+trait Singleton {
+    private static $instance = null;
+
+    public static function instance(){
+        if (! self::$instance){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+}
+```
+
+Ensures only one instance of each module runs.
+
+---
+
+### **4. Modular Design**
+Each core functionality lives inside `Modules/`:
+
+```
+Modules/
+  - Discounts.php        # Main discount handling logic
+  - CartConditions.php   # Handles cart condition rules
+```
+
+The plugin automatically loads each module.
+
+---
+
+## 🛠 How It Works
+
+### ✔ Step 1 — Plugin bootstraps via main file  
+The main plugin file defines:
+
+- Plugin name  
+- Version  
+- Autoloader  
+- Core initializer class  
+
+Example:
+
+```php
+require_once __DIR__ . '/inc/Autoloader.php';
+Autoloader::register();
+Plugin::instance();
+```
+
+---
+
+### ✔ Step 2 — Modules hook into WooCommerce
+
+Example from `Discounts.php`:
+
+```php
+add_action('woocommerce_cart_calculate_fees', [$this, 'apply_discounts']);
+```
+
+This allows your plugin to:
+
+- Check cart conditions  
+- Calculate discount amount  
+- Apply WooCommerce fee as a negative value  
+
+---
+
+### ✔ Step 3 — Conditions decide if discount is applied  
+Example from `CartConditions.php`:
+
+```php
+public function is_valid(){
+    return WC()->cart && WC()->cart->subtotal > 100;
+}
+```
+
+You can add more conditions anytime.
 
 ---
 
 ## Installation
 
-1. Download the plugin (or clone this repo).  
-2. In WordPress admin: go to **Plugins › Add New › Upload Plugin**, and select the `.zip` (or use `conditional-discount.php` if manually installing).  
-3. Click **Install Now**, then **Activate**.  
-4. Ensure that WooCommerce is installed and active — this plugin requires WooCommerce.  
+1. Download the plugin or clone the repository:
+   ```bash
+   git clone https://github.com/shanto-w3dev/Conditional-Discount-for-WooCommerce.git
+   ```
+
+2. Place the folder inside:
+   ```
+   wp-content/plugins/
+   ```
+
+3. Activate **Conditional Discount for WooCommerce** from the WordPress Plugins screen.
 
 ---
 
-## Usage / Configuration
+## Example Usage
 
-1. In WordPress Admin, go to **WooCommerce › Conditional Discounts**.  
-2. Click **Add New Discount**.  
-3. Configure your discount rule:  
-   - Choose **Conditions** — e.g. product category, user role, cart total, etc.  
-   - Choose **Discount type** — either **percentage** or **fixed amount**.  
-   - Define the discount value.  
-   - Enable or save the rule.  
-4. Once saved, the discount rule becomes active. It will automatically apply at checkout for eligible carts/users/products.  
+The plugin automatically applies:
 
----
+- A cart discount if cart subtotal exceeds a specific condition  
+- Discounts through WooCommerce's fee API  
 
-## Examples
+To extend conditions, create a new file inside:
 
-| Scenario | Setup |
-|---------|--------|
-| 10% off all “Accessories” category items | Condition: Product Category = Accessories, Discount Type = 10% |
-| $20 off cart if subtotal ≥ $200 | Condition: Cart Total ≥ 200, Discount Type = Fixed — $20 |
-| 15% off for Wholesale users | Condition: User Role = Wholesale, Discount Type = 15% |
-| Combined rule: 5% off Accessories + additional 5% for Wholesale users | Create two rules — both will apply if conditions met |
+```
+inc/App/Modules/
+```
 
-> Note: If multiple discount rules match, consider carefully how you expect discounts to stack — by default, all matching rules will apply.  
+Then register it in the plugin initializer.
 
 ---
 
-## How it works (Technical)
+## Hooks Used
 
-This WordPress plugin hooks into WooCommerce cart/order processes:  
+### **WooCommerce Hooks**
+| Hook | Purpose |
+|------|---------|
+| `woocommerce_cart_calculate_fees` | Applies discount dynamically |
 
-- On WooCommerce cart/order hooks the plugin checks each defined discount rule.  
-- It verifies whether the current cart and user meet the configured conditions (category, role, cart total, etc.).  
-- If a rule matches, it applies the discount (either percentage or fixed) before final total computation.  
-- Discount logic is separated in plugin files, making customization or extension straightforward.  
-
----
-
-## Changelog
-
-### 1.0.0
-- Initial release  
-- Basic conditional discount functionality implemented: category‑based, role‑based, cart‑total based.  
-- Support for percentage and fixed‑amount discounts.  
-- Admin interface to manage discount rules.  
-
----
-
-## Support
-
-If you find a bug, have a suggestion, or need help, please reach out via [shanto.net contact page](https://shanto.net/contact) — or open an issue/pull request on this GitHub repo.  
+### **WordPress Hooks**
+| Hook | Purpose |
+|------|---------|
+| `plugins_loaded` | Initializes plugin |
 
 ---
 
 ## License
 
-This WordPress plugin is licensed under the [GPL‑2.0+ license](http://www.gnu.org/licenses/gpl-2.0.txt).  
+This plugin is open-source and licensed under the **GPL v2 License**.
+
+---
+
+## Contributing
+
+Pull requests are welcome!  
+If you find bugs or want new features, feel free to open an issue in the repo.
 
 ---
 
 ## Author
 
-Riadujjaman Shanto — [shanto.net](https://shanto.net)  
+**Riadujjaman Shanto**  
+WordPress Developer  
+GitHub: https://github.com/shanto-w3dev
